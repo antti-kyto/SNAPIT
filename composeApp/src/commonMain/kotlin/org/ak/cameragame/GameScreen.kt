@@ -32,6 +32,7 @@ import io.github.ismoy.imagepickerkmp.domain.config.ImagePickerConfig
 import kotlinx.coroutines.delay
 import io.github.ismoy.imagepickerkmp.domain.models.PhotoResult
 import io.github.ismoy.imagepickerkmp.presentation.ui.components.ImagePickerLauncher
+import kotlin.time.Clock
 
 
 @Composable
@@ -51,24 +52,21 @@ fun GameScreen(
     LaunchedEffect(key1 = Unit) {
         onPhotoCaptured(null)
 
-        if (1 == 1) {
-            val agent = AIAgent(
-                promptExecutor = simpleGoogleAIExecutor(apiKey),
-                systemPrompt = "You are a creative game master for an office scavenger hunt." +
-                        "Generate a single, common noun for a player to find and photograph." +
-                        "Variety is key: include tech gadgets, personal care items, safety equipment, kitchen tools, and office supplies." +
-                        "Think beyond desks: consider what is in a breakroom, lobby, gym, or a person's bag (e.g., lipstick, smoke detector, remote, stapler)." +
-                        "The item must be a single object. No adjectives or descriptions. Just the noun." +
-                        "Ensure the items range from 'obvious' to 'hidden in plain sight'.",
-                llmModel = GoogleModels.Gemini2_5Flash,
-                temperature = 1.6
-            )
-            val result =
-                agent.run("Return ONLY the idea and use one to three words, maximum of three words.")
-            println(result)
-            onImageToTakeChange(result)
-            resultText = result
-        }
+        val seed = Clock.System.now().epochSeconds.toString();
+        val agent = AIAgent(
+            promptExecutor = simpleGoogleAIExecutor(apiKey),
+            systemPrompt = "You are a creative game master for an office scavenger hunt. " +
+                    "First, brainstorm at least 200 possible items across tech gadgets, personal care items, safety equipment, kitchen tools, office supplies, and miscellaneous everyday objects. " +
+                    "Then randomly select one item from your brainstormed list. " +
+                    "Use the following random seed to influence your choice: $seed " +
+                    "Return only a single common noun. No adjectives. No descriptions.",
+            llmModel = GoogleModels.Gemini2_5Flash,
+            temperature = 1.6
+        )
+        val result =
+            agent.run("Return ONLY the idea and use one to three words, maximum of three words.")
+        onImageToTakeChange(result)
+        resultText = result
 
         loading = false
 

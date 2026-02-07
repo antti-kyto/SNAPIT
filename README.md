@@ -2,7 +2,7 @@
 
 SNAPIT! is an open-source mobile party game.
 The game challenges users to find and photograph real-world objects within a one-minute window, 
-using on-device or API-based AI to make the challenge and validate the results.
+using on-device or API-based AI to make the challenges and validate the results.
 
 ## Configure
 
@@ -14,10 +14,17 @@ If you want to use different model just replace `simpleGoogleAIExecutor`.
 
 ## Screenshots
 
- 1 | 2
-:-------------------------:|:-------------------------:
-![](images/Screenshot_20260207-115914.png)  |  ![](images/Screenshot_20260207-121116.png) | 
-![](images/Screenshot_20260207-125853.png) | ![](images/Screenshot_20260207-125830.png)
+|                     1                      |                     2                      |
+|:------------------------------------------:|:------------------------------------------:|
+| ![](images/Screenshot_20260207-115914.png) | ![](images/Screenshot_20260207-121116.png) | 
+| ![](images/Screenshot_20260207-125853.png) | ![](images/Screenshot_20260207-125830.png) |
+
+## Demo Video
+
+[![Watch the video](https://i9.ytimg.com/vi/IaW3_XFgRWU/mq2.jpg?sqp=CIT_nMwG-oaymwEoCMACELQB8quKqQMcGADwAQH4AdYGgAKAD4oCDAgAEAEYTyAhKH8wDw==&rs=AOn4CLA7dBcoiB5f_3vwFiXJqWTwRiIwsw)](https://youtube.com/shorts/IaW3_XFgRWU)
+
+
+##
 
 This is a Kotlin Multiplatform project targeting Android, iOS.
 
