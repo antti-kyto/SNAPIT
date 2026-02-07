@@ -22,6 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cameragame.composeapp.generated.resources.Res
@@ -39,6 +41,8 @@ fun EndScreen(
     nextGameState: () -> Unit,
     apiKey: String
 ) {
+
+    val animation = rememberAnimations()
 
     val executor = simpleGoogleAIExecutor(apiKey)
 
@@ -73,14 +77,15 @@ fun EndScreen(
 
     LaunchedEffect(loading) {
         if (!loading) {
-            delay(3000) // Wait 5 seconds
+            delay(3500)
             nextGameState()
         }
     }
 
     val color =
-        if (loading) Color.DarkGray else if (winner) Color(0xFF1DC44A) else Color(0xFFC4311D)
+        if (loading) Color.Transparent else if (winner) Color(0xFF1DC44A) else Color(0xFFC4311D)
     val image = if (winner) Res.drawable.win else Res.drawable.lose
+    val text = if (winner) "Success!" else "Failed!"
 
     Column(
         modifier = Modifier
@@ -94,11 +99,29 @@ fun EndScreen(
             // Standard Material Spinner
             CircularProgressIndicator(color = Color.White)
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Analyzing...", color = Color.White, fontSize = 20.sp)
+            Text(
+                "Just a sec...",
+                color = Color.White,
+                fontSize = 20.sp,
+                modifier = Modifier.graphicsLayer(
+                    scaleX = animation.scale,
+                    scaleY = animation.scale
+                )
+            )
         } else {
             Image(
                 painter = painterResource(image),
                 contentDescription = null
+            )
+            Text(
+                text = text,
+                color = Color.White,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.graphicsLayer(
+                    scaleX = animation.scale,
+                    scaleY = animation.scale
+                )
             )
         }
     }

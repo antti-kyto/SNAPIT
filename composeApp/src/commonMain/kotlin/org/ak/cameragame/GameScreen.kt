@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,6 +44,8 @@ fun GameScreen(
     apiKey: String
 ) {
 
+    val animation = rememberAnimations()
+
     var millisLeft by remember { mutableStateOf(60_000L) }
     var resultText by remember { mutableStateOf("") }
     var loading by remember { mutableStateOf(true) }
@@ -52,11 +55,12 @@ fun GameScreen(
     LaunchedEffect(key1 = Unit) {
         onPhotoCaptured(null)
 
+        // Should consider to make a list of words and then randomly select or let AI choose on.
         val seed = Clock.System.now().epochSeconds.toString();
         val agent = AIAgent(
             promptExecutor = simpleGoogleAIExecutor(apiKey),
             systemPrompt = "You are a creative game master for an office scavenger hunt. " +
-                    "First, brainstorm at least 200 possible items across tech gadgets, personal care items, safety equipment, kitchen tools, office supplies, and miscellaneous everyday objects. " +
+                    "First, brainstorm at least 50 possible items across tech gadgets, personal care items, safety equipment, kitchen tools, office supplies, and miscellaneous everyday objects. " +
                     "Then randomly select one item from your brainstormed list. " +
                     "Use the following random seed to influence your choice: $seed " +
                     "Return only a single common noun. No adjectives. No descriptions.",
@@ -92,12 +96,10 @@ fun GameScreen(
         )
     }
 
-    // 3. Logic to extract Minutes, Seconds, and 2-digit Milliseconds
     val minutes = (millisLeft / 60_000).toString()
     val seconds = ((millisLeft % 60_000) / 1000).toString().padStart(2, '0')
-    val milliseconds = ((millisLeft % 1000) / 10).toString().padStart(2, '0')
 
-    val timeText = "$minutes:$seconds:$milliseconds"
+    val timeText = "$minutes:$seconds"
 
     Column(
         modifier = Modifier
@@ -114,7 +116,11 @@ fun GameScreen(
             Text(
                 text = "Loading...",
                 color = Color.White,
-                fontSize = 20.sp
+                fontSize = 20.sp,
+                modifier = Modifier.graphicsLayer(
+                    scaleX = animation.scale,
+                    scaleY = animation.scale
+                )
             )
         } else {
             Text(
@@ -126,9 +132,13 @@ fun GameScreen(
             Spacer(modifier = Modifier.height(24.dp))
             Button(
                 onClick = { showCamera = true },
+
                 modifier = Modifier
                     .width(450.dp)  // Set a fixed width
-                    .height(200.dp), // Set a fixed height
+                    .height(200.dp).graphicsLayer(
+                        scaleX = animation.scale,
+                        scaleY = animation.scale
+                    ), // Set a fixed height
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Yellow,
                     contentColor = Color.Black
@@ -153,10 +163,7 @@ fun GameScreen(
                 text = timeText,
                 color = Color.White,
                 fontSize = 64.sp,
-                fontWeight = FontWeight.Black,
-                style = MaterialTheme.typography.displayLarge.copy(
-                    fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace
-                )
+                fontWeight = FontWeight.Black
             )
         }
     }
