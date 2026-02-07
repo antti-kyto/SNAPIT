@@ -1,3 +1,24 @@
+# SNAPIT!
+
+SNAPIT! is an open-source mobile party game.
+The game challenges users to find and photograph real-world objects within a one-minute window, 
+using on-device or API-based AI to make the challenge and validate the results.
+
+## Configure
+
+Update APIKEY with your google AI apikey.
+
+Kooq supports other models too: https://docs.koog.ai/llm-providers/
+
+If you want to use different model just replace `simpleGoogleAIExecutor`.
+
+## Screenshots
+
+ 1 | 2
+:-------------------------:|:-------------------------:
+![](images/Screenshot_20260207-115914.png)  |  ![](images/Screenshot_20260207-121116.png) | 
+![](images/Screenshot_20260207-125853.png) | ![](images/Screenshot_20260207-125830.png)
+
 This is a Kotlin Multiplatform project targeting Android, iOS.
 
 * [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
@@ -24,6 +45,8 @@ in your IDE’s toolbar or build it directly from the terminal:
   ```shell
   .\gradlew.bat :composeApp:assembleDebug
   ```
+
+Easiest way to build android version is to open the project with android studio.
 
 ### Build and Run iOS Application
 
