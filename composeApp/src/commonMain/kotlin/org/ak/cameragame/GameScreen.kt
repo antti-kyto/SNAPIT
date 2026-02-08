@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,7 +40,9 @@ fun GameScreen(
     nextGameState: () -> Unit,
     onImageToTakeChange: (String) -> Unit,
     onPhotoCaptured: (PhotoResult?) -> Unit,
-    apiKey: String
+    apiKey: String,
+    gameWords: String,
+    useCustomGame: Boolean
 ) {
 
     val animation = rememberAnimations()
@@ -57,18 +58,29 @@ fun GameScreen(
 
         // Should consider to make a list of words and then randomly select or let AI choose on.
         val seed = Clock.System.now().epochSeconds.toString();
-        val agent = AIAgent(
-            promptExecutor = simpleGoogleAIExecutor(apiKey),
+
+        var systemPrompt = ""
+        if (useCustomGame && gameWords != "") {
+            systemPrompt =
+                "Select one random world from this list and return only that word: $gameWords"
+        } else {
             systemPrompt = "You are a creative game master for an office scavenger hunt. " +
                     "First, brainstorm at least 50 possible items across tech gadgets, personal care items, safety equipment, kitchen tools, office supplies, and miscellaneous everyday objects. " +
                     "Then randomly select one item from your brainstormed list. " +
                     "Use the following random seed to influence your choice: $seed " +
-                    "Return only a single common noun. No adjectives. No descriptions.",
+                    "Return only a single common noun. No adjectives. No descriptions."
+        }
+
+        val agent = AIAgent(
+            promptExecutor = simpleGoogleAIExecutor(apiKey),
+            systemPrompt = systemPrompt,
             llmModel = GoogleModels.Gemini2_5Flash,
             temperature = 1.6
         )
-        val result =
+        var result =
             agent.run("Return ONLY the idea and use one to three words, maximum of three words.")
+        result = result.uppercase()
+
         onImageToTakeChange(result)
         resultText = result
 

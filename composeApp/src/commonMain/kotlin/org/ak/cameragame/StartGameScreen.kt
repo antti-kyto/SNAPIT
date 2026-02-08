@@ -1,5 +1,6 @@
 package org.ak.cameragame
 
+import CreateGameScreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,6 +12,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,8 +28,15 @@ import cameragame.composeapp.generated.resources.logo2
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun StartGameScreen(onStartClicked: () -> Unit) {
+fun StartGameScreen(
+    onStartClicked: () -> Unit,
+    gameWords: String,
+    onGameWordsChanged: (String) -> Unit,
+    useCustomGame: Boolean,
+    onUseCustomGameChanged: (Boolean) -> Unit
+) {
 
+    var showSettings by remember { mutableStateOf(false) }
     val animation = rememberAnimations()
 
     Column(
@@ -33,41 +45,66 @@ fun StartGameScreen(onStartClicked: () -> Unit) {
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(Res.drawable.logo2),
-            contentDescription = null,
-            modifier = Modifier.graphicsLayer(rotationZ = animation.rotation)
-        )
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.graphicsLayer(
-                scaleX = animation.scale,
-                scaleY = animation.scale
+        if (showSettings) {
+            CreateGameScreen(
+                gameWords,
+                onGameWordsChanged,
+                useCustomGame,
+                onUseCustomGameChanged,
+                onShowSettingsChanged = { newValue -> showSettings = newValue })
+        } else {
+            Image(
+                painter = painterResource(Res.drawable.logo2),
+                contentDescription = null,
+                modifier = Modifier.graphicsLayer(rotationZ = animation.rotation)
             )
-        ) {
-            Button(
-                onClick = { onStartClicked() },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Yellow,
-                    contentColor = Color.Black
-                ),
-                contentPadding = PaddingValues(horizontal = 64.dp, vertical = 24.dp)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.graphicsLayer(
+                    scaleX = animation.scale,
+                    scaleY = animation.scale
+                )
             ) {
+                Button(
+                    onClick = { onStartClicked() },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Yellow,
+                        contentColor = Color.Black
+                    ),
+                    contentPadding = PaddingValues(horizontal = 64.dp, vertical = 24.dp)
+                ) {
+                    Text(
+                        text = "PLAY!",
+                        fontSize = 44.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 Text(
-                    text = "PLAY!",
-                    fontSize = 44.sp,
-                    fontWeight = FontWeight.Bold
+                    text = "Get ready to move!",
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium,
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(64.dp))
 
-            Text(
-                text = "Get ready to move!",
-                color = Color.White,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Medium,
-            )
+            Button(
+                onClick = { showSettings = true },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Yellow,
+                    contentColor = Color.Black
+                )
+            ) {
+                Text(
+                    text = "Settings",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }

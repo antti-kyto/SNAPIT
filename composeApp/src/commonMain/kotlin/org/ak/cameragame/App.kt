@@ -28,6 +28,8 @@ fun App() {
 
         var imageToTake by remember { mutableStateOf("") }
         var capturedPhoto by remember { mutableStateOf<PhotoResult?>(null) }
+        var gameWords by remember { mutableStateOf("") }
+        var useCustomGame by remember { mutableStateOf(false) }
         var gameState by remember { mutableStateOf(GAMESTATE.START) }
 
         val apiKey = "APIKEY"
@@ -55,14 +57,25 @@ fun App() {
             ) {
 
                 when (gameState) {
-                    GAMESTATE.START -> StartGameScreen(onStartClicked = { nextGameState() })
+                    GAMESTATE.START -> StartGameScreen(
+                        onStartClicked = { nextGameState() },
+                        gameWords,
+                        onGameWordsChanged = { newGameWords -> gameWords = newGameWords },
+                        useCustomGame,
+                        onUseCustomGameChanged = { newUseCustomGame ->
+                            useCustomGame = newUseCustomGame
+                        }
+                    )
+
                     GAMESTATE.PLAY -> GameScreen(
                         nextGameState = { nextGameState() },
                         onImageToTakeChange = { newPath ->
                             imageToTake = newPath
                         },
                         onPhotoCaptured = { result -> capturedPhoto = result },
-                        apiKey
+                        apiKey,
+                        gameWords,
+                        useCustomGame
                     )
 
                     GAMESTATE.END -> EndScreen(
