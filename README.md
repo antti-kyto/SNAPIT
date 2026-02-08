@@ -21,7 +21,7 @@ If you want to use different model just replace `simpleGoogleAIExecutor`.
 
 ## Demo Video
 
-[![Watch the video](https://i9.ytimg.com/vi/IaW3_XFgRWU/mq2.jpg?sqp=CIT_nMwG-oaymwEoCMACELQB8quKqQMcGADwAQH4AdYGgAKAD4oCDAgAEAEYTyAhKH8wDw==&rs=AOn4CLA7dBcoiB5f_3vwFiXJqWTwRiIwsw)](https://youtube.com/shorts/IaW3_XFgRWU)
+https://www.youtube.com/watch?v=N-D_81rxO8I
 
 
 ##
